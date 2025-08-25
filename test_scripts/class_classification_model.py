@@ -20,14 +20,13 @@ num_classes = 10
 
 model = Classifier(input_dim, hidden_dim, num_classes)
 
-# Loss and optimizer
-criterion = nn.CrossEntropyLoss()
+loss_fun = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Forward pass example
 sample_input = torch.randn(32, input_dim)  # Batch size of 32
 outputs = model(sample_input)
-loss = criterion(outputs, torch.randint(0, num_classes, (32,)))
+loss = loss_fun(outputs, torch.randint(0, num_classes, (32,)))
 
 print(f"Loss: {loss.item()}")
 

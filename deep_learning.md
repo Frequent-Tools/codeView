@@ -27,9 +27,9 @@ super(Classifier, self).__init__()
     * PyTorch does not include a built-in Dice Loss in its core torch.nn module.
 
 #### Formula of Cross Entropy
-$$
+$
 \text{Binary Cross Entropy} = - \frac{1}{N} \sum_{i=1}^{N} \left[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \right]
-$$
+$
 
 Binary Cross Entropy Loss is given by:
 $\text{Loss} = - \left[ y \log(p) + (1 - y) \log(1 - p) \right]$
@@ -151,6 +151,7 @@ In an image there are two very close confident horse detections, which have scor
 #S contains corresponding detection scores
 #Nt is the NMS threshold
 def NMS(B = [b1, ..., bn], S = [s1, ..., sn], Nt):
+    D = []
     while len(B) > 0:
         m = argmax(S)
         M = b[m]
@@ -168,19 +169,18 @@ Another alternative to NMS is `adaptive NMS`, where the threshold varies as the 
 #### Dice Coefficient
 $\text{Dice} = \frac{2 \times |X \cap Y|}{|X| + |Y|}$
 #### Recall Precision and Recall
-$\text{Precision} = \frac {\text{true positives}}{\text{true positives+false positives}}$
-
-$\text{Recall} = \frac {\text{true positives}}{\text{true positives+false negatives}}$
+$\text{Precision} = \frac {TP}{TP+FP}$<br>
+$\text{Recall} = \frac {TP}{TP+FN}$<br>
 
 Precision and Recall curve
 
 ### Instance Models
 #### RCNNs
 * R-CNN, fast R-CNN, faster R-CNN. <br>
-* Roi Pooling is applied on fast R-CNN. Roi <br>
+* Roi Pooling is applied on fast R-CNN. <br>
 * RPN Region Proposal Network is applied on faster R-CNN. <br>
 * The RoIAlign layer is designed to fix the location misalignment caused by quantization in the RoI pooling. Bilinear interpolation is applied. Faster RCNN originally used roi pooling, and later Roi align was introduced in Mask RCNN, and later implementations of faster RCNN uses Roi Align. <br>
-* In faster RCNN, each anchor corresponds 3 different scales: {1282, 2562, 5122} and 3 different **aspect ratios**: {1:1, 1:2, 2:1}.
+* In faster RCNN, each anchor corresponds 3 different scales: {128, 256, 512} and 3 different **aspect ratios**: {1:1, 1:2, 2:1}.
 
 The Pseudo-code of Fast R-CNN:
 ```python
@@ -207,27 +207,33 @@ network. <br>
 Regularization is a common technique to prevent model learning from overfitting. 
 * L1 Regularization: Penalizes the **absolute value** of coefficients, **encouraging sparse models** where unnecessary features are set to zero. 
   * $Loss_{L1} = Loss + \lambda \sum_{i=1}^{n} |W_i|$
-* L2 Regularization (Ridge): Penalizes the __square of coefficients__, **encouraging smaller weights** spread more evenly across predictors.
+* L2 Regularization: Penalizes the __square of coefficients__, **encouraging smaller weights** spread more evenly across predictors.
   * $Loss_{L2} = Loss + \lambda \sum_{i=1}^{n} W_i^2$
 * Elastic Net: Combines L1 and L2 penalties to integrate both benefits.
 * Dropout: Randomly drops units during training.
 * Early Stopping: Stops model training when further improvement on validation data ceases.
 
 ### Activation functions
-* **Sigmoid**
-* **Tanh (Hyperbolic Tangent)** Sigmoids and Tanhs may saturate and kill gradients!
-* **ReLU (Rectified Linear Units)**
+* **Sigmoid** 
+  * $\sigma(x) = \frac{1}{1+ e^{-x}}$
+* **Tanh (Hyperbolic Tangent)** 
+  * $\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$
+  * Sigmoids and Tanhs may saturate and kill gradients!
+* **ReLU (Rectified Linear Units)** 
+  * f(x) = max(0, x)
   * Accelerate the convergence significantly.
   * More efficient implementation compared with exponencials in Sigmoid/Tanh.
   * ReLU units can be “dead” during training.
-* **Leaky ReLU** Fixes the “dying ReLU” problem.
+* **Leaky ReLU** 
+  * f(x) = max(a*x, x)
+  * Fixes the “dying ReLU” problem. 
 
 ### Output Size and  Receptive Field of a CNN Neuron
 * Output size of a CNN neuron: OutputSize = (W+2P-F)/S + 1
   * W: Input size. P: Padding. F: Kernel size. S: Stride. 
   * If the number is not an integer, then the strides are set incorrectly. 
 output_field_size = (input_field_size-kernel_size + 2*padding)/stride + 1
-input field size = (output field size-1)*stride-2*padding + kernel size
+input field size = (output field size-1) * stride-2*padding + kernel size
 
 
 ### Write the training loop
@@ -286,3 +292,9 @@ for batch_idx, (features, labels) in enumerate(dataloader):
 
 ### Transformer for translation
 Structures for encoder and decoder. 
+
+## To do list
+* SWIN architecture
+* ResNet
+* GoogleNet
+
