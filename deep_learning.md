@@ -1,5 +1,6 @@
 
-### Two ways of building a model, class and nn.Sequential()
+### Snippets
+#### Two ways of building a model, class and nn.Sequential()
 See the two files `class_classification_model.py` and `sequential_classification_model.py`, they will be moved to FrequentModels later. <br>
 Why are class names always in the parentheses after super when building a torch deep learning model? <br>
 In Python 2, the syntax for calling a parent class's method (like `__init__`) using super() requires explicitly passing the current class name and the instance. This is a style that was required or common in Python 2, and is still valid in Python 3. Proper way in Python 3 is one of the two:
@@ -7,6 +8,11 @@ In Python 2, the syntax for calling a parent class's method (like `__init__`) us
 super().__init__()
 super(Classifier, self).__init__()
 ```
+#### A training loop
+The example is the `Unet_train.py`. 
+
+#### A classification utilizes CNNs and FCs
+`cnn_fc_classification_model.py`
 
 ### Loss Functions
 #### Classification losses
@@ -235,34 +241,6 @@ Regularization is a common technique to prevent model learning from overfitting.
 output_field_size = (input_field_size-kernel_size + 2*padding)/stride + 1
 input field size = (output field size-1) * stride-2*padding + kernel size
 
-
-### Write the training loop
-```python
-import torch
-from EncEncCatEnc_model import Transformer
-from dataloader import Dataset, Dataloader
-
-device = torch.device('cuda')
-model = Transformer(...).to(device)
-
-train_dataset = Dataset(dirs, img_w, img_h)
-train_loader = Dataloader(train_dataset, batch_size)
-
-model.train()
-optim = torch.optim.Adam(model.parameters(), lr=0.1)
-epoch_num = 50
-for epoch in range(epoch_num):
-    for batch_idx, batch_data in enumerate(train_loader):
-        batch_imgs, batch_masks = batch_data
-        outputs = model(batch_imgs)
-        loss = getLoss(outputs, batch_masks)
-        optim.zero_grad()
-        loss.backward()
-        optim.step()
-        print(f'epoch: {epoch+1}/{epoch_num}, batch: {batch_idx+1}/{len(train_loader)}, loss: {loss.item()}')
-    torch.save(model.state_dict(), '.../EncEncCatEnc_%03d.pkl'%(epoch+1))
-```
-
 ### More flexible learning rate
 * How to schedule learning rate
 * How to freeze part of the Model
@@ -297,4 +275,6 @@ Structures for encoder and decoder.
 * SWIN architecture
 * ResNet
 * GoogleNet
+* A CNN + FC model for classification
+* Fine tuning of LLM
 
