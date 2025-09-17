@@ -50,6 +50,7 @@ Here,
 \(p\) is the predicted probability of class 1.
 
 This figure shows the curves of Binary Cross Entropy and the derivation. 
+
 ![Derivation of the curve of cross entropy.png](figures/Derivation%20of%20the%20curve%20of%20cross%20entropy.png)
 
 #### Examples of using these losses. 
@@ -233,6 +234,10 @@ Regularization is a common technique to prevent model learning from overfitting.
 * **Leaky ReLU** 
   * f(x) = max(a*x, x)
   * Fixes the “dying ReLU” problem. 
+* **Softmax**
+  * $\text{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}$
+  * Converts a vector of numbers into a probability distribution, with values lying between 0 and 1 and summing to 1.
+  * Widely used for multi-class classification.
 
 ### Output Size and  Receptive Field of a CNN Neuron
 * Output size of a CNN neuron: OutputSize = (W+2P-F)/S + 1
@@ -277,4 +282,5 @@ Structures for encoder and decoder.
 * GoogleNet
 * A CNN + FC model for classification
 * Fine tuning of LLM
+* softmax
 
