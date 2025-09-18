@@ -243,7 +243,8 @@ Regularization is a common technique to prevent model learning from overfitting.
 * Output size of a CNN neuron: OutputSize = (W+2P-F)/S + 1
   * W: Input size. P: Padding. F: Kernel size. S: Stride. 
   * If the number is not an integer, then the strides are set incorrectly. 
-output_field_size = (input_field_size-kernel_size + 2*padding)/stride + 1
+  
+output_field_size = (input_field_size-kernel_size + 2*padding)/stride + 1<br>
 input field size = (output field size-1) * stride-2*padding + kernel size
 
 ### More flexible learning rate
@@ -257,7 +258,7 @@ For implementing my own Dataset and Dataloader, which have more flexibility, see
 ```python
 from torch.utils.data import Dataset, DataLoader
 
-class CSVLoader(Dataset):
+class CSVDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file)
     def __len__(self):
@@ -272,9 +273,10 @@ dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
 for batch_idx, (features, labels) in enumerate(dataloader):
     print(...)
 ``` 
+`super().__init__()` is not needed in the class `CSVDataset`. Calling `super().init()` is typically required when you inherit from a parent class that has an init method with important initialization logic you want to retain or extend. Since torch.utils.data.Dataset is designed as an abstract class and does not need initialization, it is not mandatory here.
 
 ### Transformer for translation
-Structures for encoder and decoder. 
+![structure_of_transformer.png](figures/deep_learning/structure_of_transformer.png)
 
 ## To do list
 * SWIN architecture
