@@ -95,23 +95,19 @@ The inline keyword in C++ is a specifier used to suggest that a function should 
 
 #### What is a delegating constructor?
 A delegating constructor in C++ is a constructor within a class that calls another constructor of the same class to perform part of its initialization. Essentially, it delegates some or all of its initialization responsibilities to another constructor within the same class. This allows for code reuse and simplifies the initialization process, especially when multiple constructors share common initialization logic. Delegating constructors were introduced in C++ 11.
+```cpp
+class Example {
+private:
+    int data;
+public:
+    Example(int value) : data(value) {} // main constructor
+    Example() : Example(0) {}           // delegates to Example(int)
+};
+```
 
 #### What is an initializer list?
 An initializer list in C++ is a way to initialize the data members of an object or invoke the constructors of its base classes in the constructor initialization list.
-```cpp
-// Constructor without initializer list
-MyClass(int _value, const std::vector<int>& _data) 
-{
-    value = _value;
-    data = _data;
-}
-```
-It consists of a comma-separated list of expressions enclosed in braces { } and is placed after the colon : following the constructor's parameter list. Using an initializer list allows for efficient initialization of data members and base classes, especially for non-default constructible types or const members.
-```cpp
-// Constructor with initializer list
-MyClass(int value, const std::vector<int>& data) 
-    : value(value), data(data) {}
-```
+
 #### What is the this keyword?
 The `this` keyword in C++ is a pointer that points to the current object. It is automatically available within member functions of a class and allows access to the object's own data members and member functions. When a member function is called on an object, this points to that object's memory location, enabling the function to operate on the object's data. The this pointer is useful in situations where member function parameters have the same names as data members, allowing for disambiguation. Additionally, it's used to enable method chaining and to pass the object itself as an argument to other functions.
 
@@ -139,10 +135,8 @@ Overload refers to defining multiple functions or operators with the same name b
 #### What is an abstract class?
 An abstract class in C++ is a class that cannot be instantiated directly and is designed to serve as a base for other classes. It may contain one or more pure virtual functions, which are declared with the virtual keyword and assigned a 0 or = 0 as their body.
 ```cpp
-// Abstract class
 class Shape {
 public:
-    // Pure virtual function
     virtual void draw() const = 0;
 };
 ```
@@ -156,6 +150,40 @@ Virtual function can be a pure virtual function in C++ if it declared in a base 
 C++ supports several types of conversions that allow for the manipulation of data types during program execution. These conversions are crucial for facilitating operations between different types.
 
 ![types_of_conversions.png](figures/Top%2050%20C%2B%2B%20Interview%20Questions%20and%20Answers/types_of_conversions.png)
+
+An example of using `dynamic_cast`. 
+```cpp
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    virtual void print() { // Must be virtual for dynamic_cast to work
+        cout << "Base" << endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    void print() override {
+        cout << "Derived" << endl;
+    }
+};
+
+int main() {
+    Derived d;
+    Base* bp = &d;
+
+    Derived* dp = dynamic_cast<Derived*>(bp);
+    if (dp != nullptr) {
+        cout << "Casting successful" << endl;
+        dp->print(); // Prints "Derived"
+    } else {
+        cout << "Casting failed" << endl;
+    }
+    return 0;
+}
+```
 
 #### What is an exception? How do you throw and catch one?
 An exception is an event in a program that disrupts the normal flow of execution. It typically arises from situations like division by zero, file not found, or invalid input. In C++, exceptions are used to handle such anomalies gracefully, allowing the program to continue running or terminate cleanly.<br>
@@ -181,6 +209,41 @@ The mutable keyword in C++ allows a member of a const object to be modified. It 
 The friend keyword in C++ is used to grant access to private and protected members of a class to other classes or functions. When a class or function is declared as a friend of a class, it has full access to the private and protected members of that class.<br>
 However, the friend keyword should be used cautiously as it breaks encapsulation and can make the code less understandable and harder to maintain. Its usage should be limited only to cases where it's truly necessary to achieve the objective.
 
+Example of a friend class. 
+```cpp
+#include <iostream>
+using namespace std;
+
+class Box {
+private:
+    double length;
+
+public:
+    Box() : length(0.0) {}
+    friend class Warehouse;
+};
+
+class Warehouse {
+public:
+    void setLength(Box &b, double len) {
+        b.length = len;
+    }
+    void showLength(Box &b) {
+        cout << "Box length: " << b.length << endl;
+    }
+};
+
+int main() {
+    Box box;
+    Warehouse wh;
+
+    wh.setLength(box, 15.5);
+    wh.showLength(box);
+
+    return 0;
+}
+```
+
 #### What is a lambda and an anonymous function in C++?
 In C++, a lambda expression, also known as an anonymous function, is a convenient way of defining an inline function that can be used for short snippets of code that are not going to be reused elsewhere and therefore do not need a named function. Introduced in C++11, lambdas are widely used for functional programming styles, especially when using standard library functions that accept function objects, such as those in <algorithm> and <functional> modules.
 ```cpp
@@ -194,11 +257,9 @@ In C++, a functor, also known as a function object, is any object that can be us
 ```cpp
 class MultiplyBy {
 private:
-    int factor; // Member to store the multiplication factor
+    int factor;
 public:
-    MultiplyBy(int x) : factor(x) {} // Constructor to initialize the factor
-
-    // Overloaded operator() allows the object to act like a function
+    MultiplyBy(int x) : factor(x) {}
     int operator()(int other) const {
         return factor * other;
     }
